@@ -7,21 +7,21 @@ import {
   Inject,
 } from '@nestjs/common';
 
-import { UserDomain } from '../domain/user.domain';
+import { CreateUserDto } from '../dto/create.user.dto';
 import { USER_TYPES } from '../interfaces/types';
-import { ICreateUserApplication } from '../interfaces/applications/create.user.application.interface';
+import { ICreateUserService } from '../interfaces/services/create.user.service.interface';
 
 @Controller('users')
 export class UsersController {
   constructor(
-    @Inject(USER_TYPES.applications.ICreateUserApplication)
-    private createUserApp: ICreateUserApplication,
+    @Inject(USER_TYPES.services.ICreateUserService)
+    private createUserService: ICreateUserService,
   ) {}
 
   @Post('/')
-  async create(@Res() res: any, @Body() userDomain: UserDomain) {
+  async create(@Res() res: any, @Body() createUserDto: CreateUserDto) {
     try {
-      const user = await this.createUserApp.create(userDomain);
+      const user = await this.createUserService.create(createUserDto);
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.CREATED,
         message: `${user.name} successfully created`,
